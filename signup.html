@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Sign Up – Ayini Home Products</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-top">
+    <a href="index.html" class="logo">
+      <img src="https://raw.githubusercontent.com/Sanjay123ps/ayini-website/main/AYINI.png" alt="Ayini Logo">
+      <div class="logo-text"><strong>Ayini Home <span style="color:var(--amber)">Products</span></strong></div>
+    </a>
+    <nav class="header-actions">
+      <a href="login.html">Login</a>
+      <a href="cart.html" class="cart-btn">🛒 Cart <span class="cart-badge" id="cartBadge">0</span></a>
+    </nav>
+  </div>
+</header>
+
+<main class="auth-page">
+  <div class="auth-container">
+    <div class="auth-panel">
+      <img src="https://raw.githubusercontent.com/Sanjay123ps/ayini-website/main/AYINI.png" alt="Ayini">
+      <h2>Join Ayini!</h2>
+      <p>Create an account to place orders, save addresses, and enjoy exclusive offers from our homemade kitchen.</p>
+    </div>
+    <div class="auth-form">
+      <h2>Create Account</h2>
+      <div id="successMsg" style="display:none;background:#f0fdf4;color:var(--green-dark);padding:12px 16px;border-radius:var(--radius);margin-bottom:16px;font-weight:600;">
+        ✅ Account created! Redirecting…
+      </div>
+      <form id="signupForm" novalidate>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Your full name" required>
+          <p class="form-error" id="nameErr">Name is required</p>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" required>
+          <p class="form-error" id="emailErr">Enter a valid email</p>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="10-digit mobile number">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Min 6 characters" required>
+          <p class="form-error" id="passErr">Password must be at least 6 characters</p>
+        </div>
+        <div class="form-group">
+          <label for="confirm">Confirm Password</label>
+          <input type="password" id="confirm" placeholder="Repeat password" required>
+          <p class="form-error" id="confirmErr">Passwords do not match</p>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="signupBtn">Create Account</button>
+        <p class="auth-link">Already have an account? <a href="login.html">Login</a></p>
+      </form>
+    </div>
+  </div>
+</main>
+
+<script src="js/api.js"></script>
+<script>
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const pass = document.getElementById('password').value;
+  const conf = document.getElementById('confirm').value;
+  let ok = true;
+  document.querySelectorAll('.form-error').forEach(el => el.style.display = 'none');
+  if (!name) { document.getElementById('nameErr').style.display = 'block'; ok = false; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('emailErr').style.display = 'block'; ok = false; }
+  if (pass.length < 6) { document.getElementById('passErr').style.display = 'block'; ok = false; }
+  if (pass !== conf) { document.getElementById('confirmErr').style.display = 'block'; ok = false; }
+  if (!ok) return;
+  const btn = document.getElementById('signupBtn');
+  btn.textContent = 'Creating…'; btn.disabled = true;
+  try {
+    const data = await AuthAPI.register(name, email, pass, phone);
+    Auth.setSession(data.token, data.user);
+    document.getElementById('successMsg').style.display = 'block';
+    setTimeout(() => window.location.href = 'index.html', 1200);
+  } catch(err) {
+    showToast(err.message, true);
+    btn.textContent = 'Create Account'; btn.disabled = false;
+  }
+});
+</script>
+</body></html>

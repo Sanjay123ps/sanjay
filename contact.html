@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="Contact Ayini Home Products – Phone, WhatsApp and email support from Coimbatore.">
+  <title>Contact Us – Ayini Home Products</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-top">
+    <a href="index.html" class="logo">
+      <img src="https://raw.githubusercontent.com/Sanjay123ps/ayini-website/main/AYINI.png" alt="Ayini Logo">
+      <div class="logo-text"><strong>Ayini Home <span style="color:var(--amber)">Products</span></strong><span>From Our Kitchen to Yours</span></div>
+    </a>
+    <nav class="header-actions">
+      <a href="login.html" id="loginLink">Login / Register</a>
+      <a href="cart.html" class="cart-btn">🛒 Cart <span class="cart-badge" id="cartBadge">0</span></a>
+    </nav>
+  </div>
+  <nav class="site-nav"><div class="nav-inner">
+    <a href="index.html">Home</a>
+    <div class="nav-dropdown"><a href="#">Categories ▾</a>
+      <ul class="nav-dropdown-menu">
+        <li><a href="masala.html">🌶️ Masalas</a></li><li><a href="rice.html">🍚 Rice & Millets</a></li>
+        <li><a href="soap.html">🧼 Herbal Soaps</a></li><li><a href="oil.html">🫙 Cold Press Oils</a></li>
+      </ul>
+    </div>
+    <a href="index.html#about">About Us</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div></nav>
+</header>
+
+<div class="page-hero">
+  <div class="container">
+    <h1>📞 Contact Us</h1>
+    <p>We'd love to hear from you. Reach out via any channel below.</p>
+    <div class="breadcrumb"><a href="index.html">Home</a><span>›</span><span>Contact</span></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+      <div class="contact-info-card">
+        <h2>Get in Touch</h2>
+        <p>Have a question about our products? Want to place a bulk order? We're here to help!</p>
+        <div class="contact-detail">
+          <div class="icon-box">📞</div>
+          <div><strong>Phone / WhatsApp</strong><p>+91 73971 30039</p></div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon-box">✉️</div>
+          <div><strong>Email</strong><p>ayinihomeproducts@gmail.com</p></div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon-box">📍</div>
+          <div><strong>Location</strong><p>PeriyanaickenPalayam, Coimbatore, Tamil Nadu</p></div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon-box">🕐</div>
+          <div><strong>Hours</strong><p>Mon–Sat: 8 AM – 8 PM</p></div>
+        </div>
+        <a href="https://wa.me/917397130039" target="_blank" class="btn btn-amber" style="margin-top:20px;display:inline-flex;">
+          💬 Chat on WhatsApp
+        </a>
+        <div style="margin-top:20px;">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3914.8793097422455!2d76.94669587538697!3d11.159231057768505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba8f100431f1507%3A0x3961aeb4ac14f207!2sAyini%20Home%20Products!5e0!3m2!1sen!2sin!4v1714737564021!5m2!1sen!2sin"
+            width="100%" height="200" style="border:0;border-radius:var(--radius);" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+      <div class="form-card">
+        <h2 style="margin-bottom:24px;color:var(--green-dark);">Send a Message</h2>
+        <div id="formSuccess" style="display:none;background:#f0fdf4;color:var(--green-dark);padding:14px;border-radius:var(--radius);margin-bottom:20px;font-weight:600;">
+          ✅ Message sent! We'll reply within 24 hours.
+        </div>
+        <form id="contactForm" novalidate>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="cname">Your Name *</label>
+              <input type="text" id="cname" placeholder="Full name" required>
+            </div>
+            <div class="form-group">
+              <label for="cphone">Phone</label>
+              <input type="tel" id="cphone" placeholder="Mobile number">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cemail">Email Address *</label>
+            <input type="email" id="cemail" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="csubject">Subject</label>
+            <input type="text" id="csubject" placeholder="Product enquiry / Order / Other">
+          </div>
+          <div class="form-group">
+            <label for="cmessage">Message *</label>
+            <textarea id="cmessage" rows="5" placeholder="Tell us how we can help…" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="sendBtn">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom"><p>© 2025 Ayini Home Products. All rights reserved. | PeriyanaickenPalayam, Coimbatore</p></div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('sendBtn');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+  try {
+    await ContactAPI.send(
+      document.getElementById('cname').value,
+      document.getElementById('cemail').value,
+      document.getElementById('cphone').value,
+      document.getElementById('csubject').value || 'Website Enquiry',
+      document.getElementById('cmessage').value
+    );
+    document.getElementById('formSuccess').style.display = 'block';
+    this.reset();
+  } catch(err) { showToast(err.message, true); }
+  btn.textContent = 'Send Message'; btn.disabled = false;
+});
+</script>
+</body></html>

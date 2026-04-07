@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Forgot Password – Ayini Home Products</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-top">
+    <a href="index.html" class="logo">
+      <img src="https://raw.githubusercontent.com/Sanjay123ps/ayini-website/main/AYINI.png" alt="Ayini Logo">
+      <div class="logo-text"><strong>Ayini Home <span style="color:var(--amber)">Products</span></strong></div>
+    </a>
+    <nav class="header-actions"><a href="login.html">Login</a></nav>
+  </div>
+</header>
+<main class="auth-page">
+  <div class="auth-container" style="max-width:520px;">
+    <div class="auth-form" style="padding:48px 36px;">
+      <div style="text-align:center;margin-bottom:28px;">
+        <span style="font-size:3rem;">🔐</span>
+        <h2 style="color:var(--green-dark);margin-top:12px;">Reset Password</h2>
+        <p style="color:var(--gray-600);font-size:.9rem;margin-top:8px;">Enter your email and we'll send a reset link.</p>
+      </div>
+      <div id="successMsg" style="display:none;background:#f0fdf4;color:var(--green-dark);padding:14px;border-radius:var(--radius);margin-bottom:20px;text-align:center;">
+        ✅ Reset link sent! Check your inbox.
+      </div>
+      <form id="forgotForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="your@email.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="sendBtn">Send Reset Link</button>
+        <p class="auth-link" style="margin-top:16px;"><a href="login.html">← Back to Login</a></p>
+      </form>
+    </div>
+  </div>
+</main>
+<script src="js/api.js"></script>
+<script>
+document.getElementById('forgotForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('sendBtn');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+  try {
+    await AuthAPI.forgot(document.getElementById('email').value);
+    document.getElementById('successMsg').style.display = 'block';
+    document.getElementById('email').value = '';
+  } catch(err) { showToast(err.message, true); }
+  btn.textContent = 'Send Reset Link'; btn.disabled = false;
+});
+</script>
+</body></html>
