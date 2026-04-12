@@ -17,7 +17,7 @@ const PRODUCTS = {
     { id:11, name:'Parru Powder',         price:60,  unit:'100g',  rating:5, category:'Powder',      emoji:'🫙' },
     { id:12, name:'Karuveppilai Powder',  price:60,  unit:'100g',  rating:5, category:'Masala',      emoji:'🌶️' },
   ],
-  pulse: [
+  pulses: [
     { id:13, name:'Karupu Kavuni',        price:250, unit:'1kg',   rating:5, category:'Rice',        emoji:'🍚', badge:'Traditional' },
     { id:14, name:'Seeraga Samba',        price:110, unit:'1kg',   rating:5, category:'Rice',        emoji:'🍚' },
     { id:15, name:'Kuthirai Vaali',       price:60,  unit:'500g',  rating:5, category:'Millet',      emoji:'🌾', badge:'Healthy' },
