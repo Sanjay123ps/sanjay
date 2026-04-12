@@ -4,7 +4,7 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="description" content="Contact Ayini Home Products – Phone, WhatsApp and email support from Coimbatore.">
   <title>Contact Us – Ayini Home Products</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="site-header">
@@ -22,7 +22,7 @@
     <a href="index.html">Home</a>
     <div class="nav-dropdown"><a href="#">Categories ▾</a>
       <ul class="nav-dropdown-menu">
-        <li><a href="masala.html">🌶️ Masalas</a></li><li><a href="rice.html">🍚 Rice & Millets</a></li>
+        <li><a href="masala.html">🌶️ Masalas</a></li><li><a href="pulses.html">🌿 Pulses, Millets & Spices</a></li>
         <li><a href="soap.html">🧼 Herbal Soaps</a></li><li><a href="oil.html">🫙 Cold Press Oils</a></li>
       </ul>
     </div>
@@ -51,7 +51,7 @@
         </div>
         <div class="contact-detail">
           <div class="icon-box">✉️</div>
-          <div><strong>Email</strong><p>ayinihomeproducts@gmail.com</p></div>
+          <div><strong>Email</strong><p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="12736b7b7c7b7a7d7f7762607d766771666152757f737b7e3c717d7f">[email&#160;protected]</a></p></div>
         </div>
         <div class="contact-detail">
           <div class="icon-box">📍</div>
@@ -110,7 +110,7 @@
   </div>
 </footer>
 
-<script src="js/api.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/api.js"></script>
 <script>
 document.getElementById('contactForm').addEventListener('submit', async function(e) {
   e.preventDefault();
@@ -122,12 +122,4 @@ document.getElementById('contactForm').addEventListener('submit', async function
       document.getElementById('cemail').value,
       document.getElementById('cphone').value,
       document.getElementById('csubject').value || 'Website Enquiry',
-      document.getElementById('cmessage').value
-    );
-    document.getElementById('formSuccess').style.display = 'block';
-    this.reset();
-  } catch(err) { showToast(err.message, true); }
-  btn.textContent = 'Send Message'; btn.disabled = false;
-});
-</script>
-</body></html>
+      document.getElementById('cmessag
