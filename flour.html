@@ -60,15 +60,6 @@
     </div>
   </div>
 </div>
-
-<!-- SEARCH BAR -->
-<div class="page-search">
-  <form class="page-search-inner" onsubmit="handleSearch(event)">
-    <input type="search" id="searchInput2" placeholder="Search in flour items…">
-    <button type="submit">🔍 Search</button>
-  </form>
-</div>
-
 <!-- PRODUCTS -->
 <section class="section" style="background:var(--cream);">
   <div class="container">
@@ -139,7 +130,7 @@
   function handleSearch(e) {
     e.preventDefault();
     const q = document.getElementById('searchInput').value.trim()
-           || document.getElementById('searchInput2').value.trim();
+;
     document.getElementById('productGrid').innerHTML = renderProducts(window.PAGE_PRODUCTS, q);
     document.getElementById('searchInput').value = q;
   }

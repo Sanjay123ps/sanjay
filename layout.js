@@ -100,7 +100,7 @@ function renderFooter() {
 // Render a product card HTML string
 function productCardHTML(p) {
   return `
-  <article class="product-card">
+  <article class="product-card" id="card-${p.id}">
     <div class="product-card-img">${p.emoji || '🌿'}
       ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
     </div>
@@ -110,9 +110,65 @@ function productCardHTML(p) {
       <div class="product-rating">${'★'.repeat(p.rating || 5)}</div>
       <p class="product-price">₹${p.price}</p>
       <p class="product-unit">per ${p.unit}</p>
-      <button class="btn btn-primary btn-full" onclick="buyNow(${p.id})">Buy Now 🛒</button>
+      <div class="qty-add-row">
+        <div class="qty-controls card-qty">
+          <button class="qty-btn" onclick="changeCardQty(${p.id}, -1)" aria-label="Decrease">−</button>
+          <span class="qty-num" id="qty-${p.id}">1</span>
+          <button class="qty-btn" onclick="changeCardQty(${p.id}, +1)" aria-label="Increase">+</button>
+        </div>
+        <button class="btn btn-primary add-to-cart-btn"
+                id="atc-${p.id}"
+                onclick="addToCart(${p.id}, '${p.name.replace(/'/g, "\\'")}')">
+          🛒 Add to Cart
+        </button>
+      </div>
     </div>
   </article>`;
+}
+
+// Qty − / + on product card
+function changeCardQty(productId, delta) {
+  const el = document.getElementById('qty-' + productId);
+  if (!el) return;
+  let val = parseInt(el.textContent) + delta;
+  if (val < 1) val = 1;
+  if (val > 99) val = 99;
+  el.textContent = val;
+}
+
+// Add to cart from product card
+async function addToCart(productId, name) {
+  if (!Auth.isLoggedIn()) {
+    window.location.href = 'login.html';
+    return;
+  }
+  const qtyEl = document.getElementById('qty-' + productId);
+  const btn   = document.getElementById('atc-' + productId);
+  const qty   = parseInt(qtyEl ? qtyEl.textContent : 1);
+
+  btn.disabled = true;
+  btn.textContent = 'Adding…';
+
+  try {
+    await CartAPI.add(productId, qty);
+    btn.textContent = '✅ Added!';
+    btn.style.background = '#16a34a';
+    updateCartBadge();
+    showToast(name + ' added to cart!');
+    setTimeout(() => {
+      btn.textContent = '🛒 Add to Cart';
+      btn.style.background = '';
+      btn.disabled = false;
+      if (qtyEl) qtyEl.textContent = '1';
+    }, 1500);
+  } catch (e) {
+    btn.textContent = '❌ ' + (e.message || 'Failed');
+    showToast(e.message || 'Could not add to cart', true);
+    setTimeout(() => {
+      btn.textContent = '🛒 Add to Cart';
+      btn.disabled = false;
+    }, 1800);
+  }
 }
 
 // Render product grid with search filter
@@ -136,9 +192,54 @@ function handleSearch(e) {
   e.preventDefault();
   const q = document.getElementById('searchInput').value.trim();
   const grid = document.getElementById('productGrid');
+
   if (grid && window.PAGE_PRODUCTS) {
+    // Category page — search within that category only
     grid.innerHTML = renderProducts(window.PAGE_PRODUCTS, q);
-  } else if (q) {
-    window.location.href = `masala.html?search=${encodeURIComponent(q)}`;
+  } else if (q && typeof PRODUCTS !== 'undefined') {
+    // Index page — search across ALL categories
+    const allProducts = Object.values(PRODUCTS).flat();
+    const term = q.toLowerCase();
+    const results = allProducts.filter(p =>
+      p.name.toLowerCase().includes(term) ||
+      (p.category || '').toLowerCase().includes(term) ||
+      (p.desc || p.description || '').toLowerCase().includes(term)
+    );
+
+    // Show results in a search results overlay/section
+    let resultsSection = document.getElementById('searchResultsSection');
+    if (!resultsSection) {
+      resultsSection = document.createElement('section');
+      resultsSection.id = 'searchResultsSection';
+      resultsSection.className = 'section';
+      resultsSection.style.cssText = 'background:var(--cream);padding-top:32px;';
+      resultsSection.innerHTML = `
+        <div class="container">
+          <div class="section-header" style="margin-bottom:24px;">
+            <h2 id="searchResultsTitle"></h2>
+            <button onclick="document.getElementById('searchResultsSection').remove();document.getElementById('searchInput').value='';"
+              style="margin-top:8px;background:none;border:1.5px solid var(--gray-200);padding:6px 16px;border-radius:var(--radius);cursor:pointer;font-size:.85rem;color:var(--gray-600);">
+              ✕ Clear Search
+            </button>
+          </div>
+          <div class="product-grid" id="searchResultsGrid"></div>
+        </div>`;
+      // Insert after hero section
+      const hero = document.querySelector('.hero') || document.querySelector('.page-hero');
+      if (hero && hero.nextSibling) {
+        hero.parentNode.insertBefore(resultsSection, hero.nextSibling);
+      } else {
+        document.body.appendChild(resultsSection);
+      }
+    }
+
+    document.getElementById('searchResultsTitle').textContent =
+      results.length ? `Search results for "${q}" (${results.length} found)` : `No results for "${q}"`;
+    document.getElementById('searchResultsGrid').innerHTML =
+      results.length ? results.map(productCardHTML).join('') :
+      `<div class="empty-state" style="grid-column:1/-1"><div class="icon">🔍</div><h3>No products found</h3><p>Try a different keyword.</p></div>`;
+
+    // Scroll to results
+    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }

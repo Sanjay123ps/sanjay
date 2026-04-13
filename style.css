@@ -522,3 +522,71 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
   .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
   .category-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ═══════════════════════════════════════════════
+   PRODUCT CARD — Qty Selector + Add to Cart
+═══════════════════════════════════════════════ */
+
+/* Qty + button row inside product card */
+.qty-add-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* Qty control scoped to product cards (won't break cart page) */
+.card-qty {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.card-qty .qty-btn {
+  width: 32px;
+  height: 36px;
+  background: var(--gray-100);
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--green-dark);
+  transition: background var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+}
+.card-qty .qty-btn:hover  { background: #dcfce7; }
+.card-qty .qty-btn:active { background: var(--green); color: #fff; }
+
+.card-qty .qty-num {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 700;
+  font-size: .9rem;
+  color: var(--text);
+  user-select: none;
+}
+
+/* Add to Cart button */
+.add-to-cart-btn {
+  flex: 1;
+  min-width: 110px;
+  font-size: .82rem;
+  padding: 0 12px;
+  height: 36px;
+  white-space: nowrap;
+  transition: background var(--transition), transform .1s;
+}
+.add-to-cart-btn:hover   { transform: translateY(-1px); }
+.add-to-cart-btn:active  { transform: scale(0.97); }
+.add-to-cart-btn:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+  transform: none !important;
+}
