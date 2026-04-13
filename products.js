@@ -95,3 +95,109 @@ const PRODUCTS = {
     { id:78, name:'Millet Noodles (Ragi)',          unit:'200g',  price:60, category:'noodles', emoji:'🍜', description:'Finger millet noodles packed with calcium, great for kids and adults alike.' },
   ],
 };
+
+// ═══════════════════════════════════════════
+//  RENDER FUNCTIONS
+// ═══════════════════════════════════════════
+
+/**
+ * Renders a product grid with qty selector + Add to Cart button.
+ * @param {Array}  products  - array of product objects
+ * @param {string} query     - optional search filter string
+ */
+function renderProducts(products, query) {
+  const q = (query || '').toLowerCase().trim();
+  const filtered = q
+    ? products.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        (p.desc || p.description || '').toLowerCase().includes(q) ||
+        (p.category || '').toLowerCase().includes(q))
+    : products;
+
+  if (!filtered.length) {
+    return `<div class="empty-state" style="grid-column:1/-1">
+              <div class="icon">🔍</div>
+              <h3>No results for "${query}"</h3>
+              <p>Try a different keyword.</p>
+            </div>`;
+  }
+
+  return filtered.map(p => {
+    const desc = p.desc || p.description || '';
+    const badge = p.badge ? `<span class="product-badge">${p.badge}</span>` : '';
+    const stars = '⭐'.repeat(p.rating || 5);
+    return `
+      <div class="product-card" id="card-${p.id}">
+        ${badge}
+        <div class="product-emoji">${p.emoji || '🌿'}</div>
+        <h3 class="product-name">${p.name}</h3>
+        ${desc ? `<p class="product-desc">${desc}</p>` : ''}
+        <p class="product-unit">${p.unit || ''}</p>
+        <div class="product-rating">${stars}</div>
+        <div class="product-footer">
+          <span class="product-price">₹${p.price}</span>
+          <div class="qty-add-row">
+            <div class="qty-controls card-qty">
+              <button class="qty-btn" onclick="changeCardQty(${p.id}, -1)" aria-label="Decrease quantity">−</button>
+              <span class="qty-num" id="qty-${p.id}">1</span>
+              <button class="qty-btn" onclick="changeCardQty(${p.id}, +1)" aria-label="Increase quantity">+</button>
+            </div>
+            <button class="btn btn-primary add-to-cart-btn"
+                    id="atc-${p.id}"
+                    onclick="addToCart(${p.id}, '${p.name.replace(/'/g, "\\'")}')">
+              🛒 Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ─── Qty change on product card ───────────────────────────────────────────────
+function changeCardQty(productId, delta) {
+  const el = document.getElementById('qty-' + productId);
+  if (!el) return;
+  let val = parseInt(el.textContent) + delta;
+  if (val < 1) val = 1;
+  if (val > 99) val = 99;
+  el.textContent = val;
+}
+
+// ─── Add to cart ──────────────────────────────────────────────────────────────
+async function addToCart(productId, name) {
+  // Redirect to login if not authenticated
+  if (typeof Auth !== 'undefined' && !Auth.isLoggedIn()) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  const qtyEl = document.getElementById('qty-' + productId);
+  const btn   = document.getElementById('atc-' + productId);
+  const qty   = parseInt(qtyEl ? qtyEl.textContent : 1);
+
+  btn.disabled = true;
+  btn.textContent = 'Adding…';
+
+  try {
+    await CartAPI.add(productId, qty);
+    btn.textContent = '✅ Added!';
+    btn.style.background = '#16a34a';
+    if (typeof updateCartBadge === 'function') updateCartBadge();
+    if (typeof showToast === 'function') showToast(`${name} added to cart!`);
+
+    setTimeout(() => {
+      btn.textContent = '🛒 Add to Cart';
+      btn.style.background = '';
+      btn.disabled = false;
+      if (qtyEl) qtyEl.textContent = '1'; // reset qty to 1
+    }, 1500);
+
+  } catch (e) {
+    btn.textContent = '❌ ' + (e.message || 'Failed');
+    if (typeof showToast === 'function') showToast(e.message || 'Could not add to cart', true);
+    setTimeout(() => {
+      btn.textContent = '🛒 Add to Cart';
+      btn.disabled = false;
+    }, 1800);
+  }
+}
