@@ -197,7 +197,7 @@ function handleSearch(e) {
     // Category page — search within that category only
     grid.innerHTML = renderProducts(window.PAGE_PRODUCTS, q);
   } else if (q && typeof PRODUCTS !== 'undefined') {
-    // Index page — search across ALL categories
+    // Index page — search across ALL categories (masala, pulses, soap, oil, flour, noodles)
     const allProducts = Object.values(PRODUCTS).flat();
     const term = q.toLowerCase();
     const results = allProducts.filter(p =>

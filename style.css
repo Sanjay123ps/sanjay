@@ -239,34 +239,99 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
 /* ── Product Cards ──────────────────────────── */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }
+
+/* Base card — works for BOTH old (.product-card-img) and new (.product-emoji) layouts */
 .product-card {
-  background: white; border-radius: var(--radius-lg);
-  overflow: hidden; box-shadow: var(--shadow-sm);
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
   transition: transform var(--transition), box-shadow var(--transition);
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid #f0ebe0;
 }
-.product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+
+/* Old card style: emoji inside a coloured area div */
 .product-card-img {
-  height: 200px; background: var(--gray-100);
+  height: 170px;
+  background: linear-gradient(135deg, #f5f0e8, #ede5d0);
   display: flex; align-items: center; justify-content: center;
   font-size: 4rem; position: relative;
 }
-.product-badge {
-  position: absolute; top: 12px; left: 0;
-  background: var(--amber); color: white;
-  padding: 4px 14px; font-size: 0.75rem; font-weight: 700;
-  border-radius: 0 6px 6px 0;
+
+/* New card style: emoji rendered as its own block (from products.js renderProducts) */
+.product-emoji {
+  font-size: 3.6rem;
+  text-align: center;
+  padding: 28px 16px 16px;
+  background: linear-gradient(135deg, #f5f0e8, #ede5d0);
+  line-height: 1;
+  transition: transform var(--transition);
 }
-.product-card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
-.product-category { font-size: 0.75rem; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-.product-name { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
-.product-rating { color: var(--amber); font-size: 0.85rem; margin-bottom: 8px; }
-.product-price { font-size: 1.3rem; font-weight: 700; color: var(--green-dark); margin-bottom: 4px; }
-.product-unit  { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 16px; }
+.product-card:hover .product-emoji { transform: scale(1.08); }
+
+/* Badge — positioned on card (position:relative ensures it works for both layouts) */
+.product-badge {
+  position: absolute; top: 14px; left: 0;
+  background: var(--amber); color: white;
+  padding: 5px 16px; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  border-radius: 0 6px 6px 0;
+  z-index: 1;
+}
+
+/* Card body — generous padding so nothing feels cramped */
+.product-card-body {
+  padding: 18px 20px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;                       /* individual margins handle spacing */
+}
+.product-category {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.product-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+/* Description text shown in new-style cards */
+.product-desc {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  line-height: 1.55;
+  margin-bottom: 10px;
+  flex: 1;
+}
+
+.product-unit   { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 8px; }
+.product-rating { color: var(--amber); font-size: 0.85rem; margin-bottom: 10px; letter-spacing: 0.04em; }
+.product-price  { font-size: 1.4rem; font-weight: 700; color: var(--green-dark); margin-bottom: 16px; }
 .product-card-body .btn { margin-top: auto; }
+
+/* Footer wrapper inside new-style cards (price + qty row) */
+.product-footer {
+  margin-top: auto;
+  padding-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 
 /* ── Search bar on product pages ────────────── */
 .page-search {
@@ -284,6 +349,47 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
 .page-search-inner button {
   background: var(--amber); color: white;
   padding: 14px 24px; font-size: 0.95rem; font-weight: 600;
+}
+
+/* ── Search results section (index page) ────── */
+#searchResultsSection {
+  background: var(--cream);
+  padding: 40px 0 56px;
+  border-top: 3px solid var(--amber);
+  animation: fadeSlideDown 0.3s ease both;
+}
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#searchResultsSection .section-header {
+  margin-bottom: 32px;
+}
+#searchResultsSection h2 {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  color: var(--green-dark);
+  margin-bottom: 10px;
+}
+/* The "Clear Search" button inside search results */
+#searchResultsSection button[onclick*="clearSearch"],
+#searchResultsSection button[onclick*="remove"] {
+  margin-top: 8px;
+  background: none;
+  border: 1.5px solid var(--gray-200);
+  padding: 7px 18px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  font-family: var(--font-body);
+  font-weight: 500;
+  transition: all var(--transition);
+}
+#searchResultsSection button[onclick*="clearSearch"]:hover,
+#searchResultsSection button[onclick*="remove"]:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #dc2626;
 }
 
 /* ── Testimonials ───────────────────────────── */
@@ -531,28 +637,28 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
 .qty-add-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: nowrap;
 }
 
-/* Qty control scoped to product cards (won't break cart page) */
+/* Qty control scoped to product cards */
 .card-qty {
   display: flex;
   align-items: center;
   border: 1.5px solid var(--gray-200);
   border-radius: var(--radius);
   overflow: hidden;
-  height: 36px;
+  height: 40px;
   flex-shrink: 0;
 }
 
 .card-qty .qty-btn {
-  width: 32px;
-  height: 36px;
+  width: 36px;
+  height: 40px;
   background: var(--gray-100);
   border: none;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   cursor: pointer;
   color: var(--green-dark);
   transition: background var(--transition);
@@ -565,10 +671,10 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
 .card-qty .qty-btn:active { background: var(--green); color: #fff; }
 
 .card-qty .qty-num {
-  min-width: 30px;
+  min-width: 34px;
   text-align: center;
   font-weight: 700;
-  font-size: .9rem;
+  font-size: 0.95rem;
   color: var(--text);
   user-select: none;
 }
@@ -576,17 +682,19 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
 /* Add to Cart button */
 .add-to-cart-btn {
   flex: 1;
-  min-width: 110px;
-  font-size: .82rem;
-  padding: 0 12px;
-  height: 36px;
+  min-width: 0;
+  font-size: 0.83rem;
+  padding: 0 14px;
+  height: 40px;
   white-space: nowrap;
-  transition: background var(--transition), transform .1s;
+  border-radius: var(--radius);
+  transition: background var(--transition), transform 0.1s, box-shadow var(--transition);
 }
-.add-to-cart-btn:hover   { transform: translateY(-1px); }
+.add-to-cart-btn:hover   { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(46,125,50,0.3); }
 .add-to-cart-btn:active  { transform: scale(0.97); }
 .add-to-cart-btn:disabled {
-  opacity: .7;
+  opacity: 0.65;
   cursor: not-allowed;
   transform: none !important;
+  box-shadow: none !important;
 }
